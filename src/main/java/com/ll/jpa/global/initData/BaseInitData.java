@@ -1,6 +1,5 @@
 package com.ll.jpa.global.initData;
 
-import com.ll.jpa.domain.post.comment.entity.PostComment;
 import com.ll.jpa.domain.post.comment.service.PostCommentService;
 import com.ll.jpa.domain.post.post.entity.Post;
 import com.ll.jpa.domain.post.post.service.PostService;
@@ -38,18 +37,14 @@ public class BaseInitData {
         Post post2 = postService.write("title2", "content2");
         Post post3 = postService.write("title3", "content3");
 
-        PostComment postComment1 = postCommentService.write(post1, "comment1");
-        PostComment postComment2 = postCommentService.write(post1, "comment2");
-        PostComment postComment3 = postCommentService.write(post2, "comment3");
+        post1.addComment("comment1");
+        post1.addComment("comment2");
+        post2.addComment("comment3");
     }
 
     @Transactional
     public void work2() {
-        Post post3 = postService.findById(3).get();
 
-        PostComment newPostComment = postCommentService.write(post3, "new comment");
-
-        postCommentService.delete(newPostComment);
     }
 
     @Transactional
