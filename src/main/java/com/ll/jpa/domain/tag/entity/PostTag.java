@@ -1,8 +1,7 @@
-package com.ll.jpa.domain.post.comment.entity;
+package com.ll.jpa.domain.tag.entity;
 
-import com.ll.jpa.domain.member.member.entity.Member;
 import com.ll.jpa.domain.post.post.entity.Post;
-import com.ll.jpa.global.jpa.entity.BaseTime;
+import com.ll.jpa.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,15 +14,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostComment extends BaseTime {
+public class PostTag extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member author;
-
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 30)
     private String content;
-
-    private boolean blind;
 }

@@ -1,17 +1,14 @@
 package com.ll.jpa.domain.post.post.entity;
 
+import com.ll.jpa.domain.member.member.entity.Member;
 import com.ll.jpa.domain.post.comment.entity.PostComment;
+import com.ll.jpa.domain.tag.entity.PostTag;
+import com.ll.jpa.global.jpa.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
@@ -19,20 +16,9 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EntityListeners(AuditingEntityListener.class)
-public class Post {
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Setter(AccessLevel.PRIVATE)
-    private Long id;
-
-    @CreatedDate
-    @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Setter(AccessLevel.PRIVATE)
-    private LocalDateTime modifiedAt;
+public class Post extends BaseTime {
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member author;
 
     @Column(length = 100)
     private String title;
@@ -43,15 +29,36 @@ public class Post {
     private boolean blind;
 
     @Builder.Default
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostComment> comments= new ArrayList<>();
 
-    public void addComment(String content) {
-        PostComment postComment = PostComment.builder()
+    @Builder.Default
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostTag> tags= new ArrayList<>();
+
+    public void addComment(Member author, String content) {
+        PostComment postComment = PostComment
+                .builder()
                 .post(this)
+                .author(author)
                 .content(content)
                 .build();
 
         comments.add(postComment);
     }
+
+    public void addTag(String content) {
+        PostTag potsTag = PostTag
+                .builder()
+                .post(this)
+                .content(content)
+                .build();
+
+        tags.add(potsTag);
+    }
+
+    public boolean removeComment(PostComment comment) {
+        return comments.remove(comment);
+    }
+
 }
