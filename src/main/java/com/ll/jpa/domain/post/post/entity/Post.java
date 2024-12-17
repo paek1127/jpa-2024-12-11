@@ -7,9 +7,7 @@ import com.ll.jpa.global.jpa.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Entity
 @Getter
@@ -35,7 +33,7 @@ public class Post extends BaseTime {
 
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostTag> tags= new ArrayList<>();
+    private Set<PostTag> tags= new HashSet<>();
 
     public void addComment(Member author, String content) {
         PostComment postComment = PostComment
@@ -49,12 +47,6 @@ public class Post extends BaseTime {
     }
 
     public void addTag(String content) {
-        Optional<PostTag> opOldPostTag = tags.stream()
-                .filter(tag -> tag.getContent().equals(content))
-                .findFirst();
-
-        if (opOldPostTag.isPresent()) return;
-
         PostTag potsTag = PostTag
                 .builder()
                 .post(this)
