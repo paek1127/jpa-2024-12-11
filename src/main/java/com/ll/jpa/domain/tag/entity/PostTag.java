@@ -1,11 +1,7 @@
 package com.ll.jpa.domain.tag.entity;
 
 import com.ll.jpa.domain.post.post.entity.Post;
-import com.ll.jpa.global.jpa.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,11 +11,14 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class PostTag extends BaseEntity {
+@IdClass(PostTagId.class)
+public class PostTag {
+    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @EqualsAndHashCode.Include
     private Post post;
 
+    @Id
     @Column(length = 30)
     @EqualsAndHashCode.Include
     private String content;
