@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -48,6 +49,12 @@ public class Post extends BaseTime {
     }
 
     public void addTag(String content) {
+        Optional<PostTag> opOldPostTag = tags.stream()
+                .filter(tag -> tag.getContent().equals(content))
+                .findFirst();
+
+        if (opOldPostTag.isPresent()) return;
+
         PostTag potsTag = PostTag
                 .builder()
                 .post(this)
